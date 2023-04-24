@@ -18,8 +18,9 @@
 import "../pkg/lib/patternfly/patternfly-5-cockpit.scss";
 
 import React from "react";
-import { createRoot } from "react-dom/client";
-import Application from "./app.jsx";
+import ReactDOM from "react-dom";
+import Application from "./app";
+
 /*
  * PF4 overrides need to come after the JSX components imports because
  * these are importing CSS stylesheets that we are overriding
@@ -29,7 +30,9 @@ import Application from "./app.jsx";
  */
 import "../pkg/lib/patternfly/patternfly-5-overrides.scss";
 import "./app.scss";
-
+/*
+console.log(foo("foo"))
+ */
 document.addEventListener("DOMContentLoaded", function () {
     const container = document.getElementById("app");
     const root = createRoot(container);
