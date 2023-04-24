@@ -25,10 +25,10 @@ const copy_files = [
 const plugins = [
     new copy({ patterns: copy_files }),
     new extract({filename: "[name].css"}),
-    new ESLintPlugin({
-        extensions: ["js", "jsx"],
+   /*  new ESLintPlugin({
+        extensions: ["js", "jsx", "ts"],
         failOnWarning: true,
-    }),
+    }), */
     new CockpitPoPlugin(),
     new CockpitRsyncPlugin({dest: packageJson.name}),
 ];
@@ -44,6 +44,8 @@ if (production) {
 module.exports = {
     mode: production ? 'production' : 'development',
     resolve: {
+        // extensions:['.ts','.tsx'],
+        extensions: ['*', '.js', '.jsx', '.tsx', '.ts'],
         modules: [ "node_modules", path.resolve(__dirname, 'src/lib') ],
         alias: { 'font-awesome': 'font-awesome-sass/assets/stylesheets' },
     },
@@ -54,7 +56,7 @@ module.exports = {
         ignored: /node_modules/,
     },
     entry: {
-        index: "./src/index.js",
+        index: "./src/index.ts",
     },
     // cockpit.js gets included via <script>, everything else should be bundled
     externals: { "cockpit": "cockpit" },
@@ -82,8 +84,13 @@ module.exports = {
             {
                 exclude: /node_modules/,
                 use: "babel-loader",
-                test: /\.(js|jsx)$/
+                test: /\.(js|ts|jsx|tsx)$/
             },
+        /*     {
+                test: /\.(js|ts|jsx|tsx)$/,
+                use: 'ts-loader',
+                exclude:/node_modules/,
+            }, */
             /* HACK: remove unwanted fonts from PatternFly's css */
             {
                 test: /patternfly-4-cockpit.scss$/,

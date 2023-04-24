@@ -39,14 +39,23 @@ import {
     Tooltip,
 } from "@patternfly/react-core";
 import { CheckCircleIcon } from "@patternfly/react-icons";
+import { TODO_TYPE } from "@/todo";
 
 const _ = cockpit.gettext;
 
-const SnapshotItem = ({ item, setDirty, setWaiting, waiting }) => {
+type SnapshotItemProps = {
+    item: TODO_TYPE;
+    waiting: string | null;
+    setWaiting: (waiting: string | null) => void;
+    setDirty: (dirty: boolean) => void;
+};
+
+
+const SnapshotItem = ({ item, setDirty, setWaiting, waiting }: SnapshotItemProps) => {
     const [expanded, setExpanded] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
 
-    const rollback = async (snap, msg, reboot) => {
+    const rollback = async (snap: TODO_TYPE, msg: string, reboot: boolean) => {
         setWaiting(msg);
         try {
             let script = `transactional-update rollback ${snap.number}`;
@@ -66,24 +75,24 @@ const SnapshotItem = ({ item, setDirty, setWaiting, waiting }) => {
         }
         setWaiting(null);
     };
-    const rollbackAndReboot = (snap) => {
+    const rollbackAndReboot = (snap: TODO_TYPE) => {
         rollback(snap, _("Rolling back..."), true);
     };
-    const rollbackOnly = (snap) => {
+    const rollbackOnly = (snap: TODO_TYPE) => {
         rollback(snap, _("Rolling back..."), false);
     };
-    const activateAndReboot = (snap) => {
+    const activateAndReboot = (snap: TODO_TYPE) => {
         rollback(snap, _("Activating..."), true);
     };
-    const activateOnly = (snap) => {
+    const activateOnly = (snap: TODO_TYPE) => {
         rollback(snap, _("Activating..."), false);
     };
-    const actions = (item) => {
+    const actions = (item: TODO_TYPE): any[] | undefined => {
         if (item.old) {
             return [
                 <DropdownItem
                     key="rollback"
-                    isDisabled={waiting}
+                    isDisabled={!!waiting}
                     onClick={() => {
                         rollbackOnly(item);
                     }}
@@ -96,7 +105,7 @@ const SnapshotItem = ({ item, setDirty, setWaiting, waiting }) => {
             return [
                 <DropdownItem
                     key="activate"
-                    isDisabled={waiting}
+                    isDisabled={!!waiting}
                     onClick={() => {
                         activateOnly(item);
                     }}
@@ -105,12 +114,13 @@ const SnapshotItem = ({ item, setDirty, setWaiting, waiting }) => {
                 </DropdownItem>,
             ];
         }
-        return null;
+        return undefined;
     };
     return (
         <DataListItem isExpanded={expanded}>
             <DataListItemRow>
                 <DataListToggle
+                    id="TODO_TYPE"
                     // hide extension part until we find some good use for it
                     style={{ display: "none" }}
                     onClick={() => {
@@ -152,7 +162,7 @@ const SnapshotItem = ({ item, setDirty, setWaiting, waiting }) => {
                             {!item.active && !item.old && (
                                 <Button
                                     variant="primary"
-                                    isDisabled={waiting}
+                                    isDisabled={!!waiting}
                                     onClick={() => {
                                         activateAndReboot(item);
                                     }}
@@ -164,7 +174,7 @@ const SnapshotItem = ({ item, setDirty, setWaiting, waiting }) => {
                             {item.old && (
                                 <Button
                                     variant="secondary"
-                                    isDisabled={waiting}
+                                    isDisabled={!!waiting}
                                     onClick={() => {
                                         rollbackAndReboot(item);
                                     }}
@@ -176,7 +186,7 @@ const SnapshotItem = ({ item, setDirty, setWaiting, waiting }) => {
                         </DataListCell>,
                     ]}
                 />
-                <DataListAction>
+                <DataListAction aria-label="TODO_TYPE" aria-labelledby="TODO_TYPE" id="TODO_TYPE">
                     {actions(item) && (
                         <Dropdown
                             isPlain
@@ -194,7 +204,7 @@ const SnapshotItem = ({ item, setDirty, setWaiting, waiting }) => {
                     )}
                 </DataListAction>
             </DataListItemRow>
-            <DataListContent isHidden={!expanded}>
+            <DataListContent isHidden={!expanded} aria-label="TODO_TYPE">
                 More details about selected snapshot More details about selected
                 snapshot More details about selected snapshot More details about
                 selected snapshot

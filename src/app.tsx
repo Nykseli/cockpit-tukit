@@ -45,6 +45,8 @@ import UpdatesPanel from "./components/UpdatesPanel";
 
 import { createSnapshot, snapshotsProxy, tukitdProxy } from "./tukit";
 import { mostSevereStatus } from "./status";
+import { TODO_TYPE } from "./todo";
+import { Update } from "./update";
 
 const _ = cockpit.gettext;
 
@@ -52,17 +54,17 @@ const Application = () => {
     const [status, setStatus] = useState([]);
 
     const [snapshots, setSnapshots] = useState([]);
-    const [snapshotsWaiting, setSnapshotsWaiting] = useState(null);
+    const [snapshotsWaiting, setSnapshotsWaiting] = useState<string | null>(null);
     const [snapshotsDirty, setSnapshotsDirty] = useState(true);
 
-    const [updates, setUpdates] = useState([]);
-    const [updatesWaiting, setUpdatesWaiting] = useState(null);
-    const [updatesError, setUpdatesError] = useState();
+    const [updates, setUpdates] = useState<Update[]>([]);
+    const [updatesWaiting, setUpdatesWaiting] = useState<string | null>(null);
+    const [updatesError, setUpdatesError] = useState<string | null>(null);
     const [updatesDirty, setUpdatesDirty] = useState(true);
 
     const [serviceReady, setServiceReady] = useState(false);
 
-    const setDirty = (v) => {
+    const setDirty = (v: boolean) => {
         setSnapshotsDirty(v);
         setUpdatesDirty(v);
     };
@@ -159,13 +161,13 @@ const Application = () => {
             try {
                 const snaps = (
                     await proxy.List("number,default,active,date,description")
-                ).map((snap) => createSnapshot(snap));
+                ).map((snap: TODO_TYPE) => createSnapshot(snap));
                 // remove "current" snapshot
                 snaps.shift();
-                snaps.sort((a, b) => b.number - a.number);
+                snaps.sort((a: TODO_TYPE, b: TODO_TYPE) => b.number - a.number);
                 // mark old snapshots
-                let active = null;
-                snaps.forEach((s) => {
+                let active: TODO_TYPE | null = null;
+                snaps.forEach((s: TODO_TYPE) => {
                     if (active) s.old = true;
                     if (s.active) active = s;
                 });
@@ -183,6 +185,7 @@ const Application = () => {
     return (
         <Page>
             <PageSection>
+                <h1>Hello from typescript!</h1>
                 <Gallery className="ct-cards-grid" hasGutter>
                     <StatusPanel
                         waiting={snapshotsWaiting || updatesWaiting}
@@ -204,7 +207,7 @@ const Application = () => {
                         <CardTitle>
                             {_("Snapshots & Updates")}
                             <Button
-                                isDisabled={snapshotsWaiting || updatesWaiting}
+                                isDisabled={!!snapshotsWaiting || !!updatesWaiting}
                                 isSmall
                                 variant="plain"
                                 onClick={() => { setDirty(true) }}
@@ -214,7 +217,7 @@ const Application = () => {
                         </CardTitle>
                         <CardBody>
                             {serviceProblem() || (snapshotsWaiting && loading()) || (
-                                <DataList isCompact>
+                                <DataList isCompact aria-label="data-list">
                                     {updates.length > 0 && (
                                         <UpdatesItem
                                             updates={updates}
@@ -227,7 +230,7 @@ const Application = () => {
                                             }
                                         />
                                     )}
-                                    {snapshots.map((item) => (
+                                    {snapshots.map((item: TODO_TYPE) => (
                                         <SnapshotItem
                                             key={item.number}
                                             item={item}

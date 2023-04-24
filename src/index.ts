@@ -19,7 +19,10 @@ import "./lib/patternfly/patternfly-4-cockpit.scss";
 
 import React from "react";
 import ReactDOM from "react-dom";
-import Application from "./app.jsx";
+import Application from "./app";
+
+import { foo } from "./foo"
+
 /*
  * PF4 overrides need to come after the JSX components imports because
  * these are importing CSS stylesheets that we are overriding
@@ -29,7 +32,9 @@ import Application from "./app.jsx";
  */
 import "./lib/patternfly/patternfly-4-overrides.scss";
 import "./app.scss";
-
+/*
+console.log(foo("foo"))
+ */
 document.addEventListener("DOMContentLoaded", function () {
     ReactDOM.render(
         React.createElement(Application, {}),
