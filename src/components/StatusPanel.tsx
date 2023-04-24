@@ -37,8 +37,19 @@ import {
 } from "@patternfly/react-icons";
 
 import "./StatusPanel.scss";
+import { Update } from "@/update";
+import { TODO_TYPE } from "@/todo";
 
 const _ = cockpit.gettext;
+
+type StatusPanelProps = {
+    updates: Update[];
+    waiting: string | null | boolean;
+    status: TODO_TYPE;
+    setStatus: (status: TODO_TYPE) => void;
+    updatesError: string | null;
+    snapshots: TODO_TYPE[]
+};
 
 const StatusPanel = ({
     waiting,
@@ -47,7 +58,7 @@ const StatusPanel = ({
     updates,
     updatesError,
     snapshots,
-}) => {
+}: StatusPanelProps) => {
     // update page status
     useEffect(() => {
         console.log("Updating page status");
@@ -105,7 +116,7 @@ const StatusPanel = ({
         setStatus(s);
     }, [waiting, snapshots, updates, updatesError, setStatus]);
 
-    const icon = (s) => {
+    const icon = (s: TODO_TYPE) => {
         const i = (s.details && s.details.icon) || s.type;
         const c = `tukit-status-${i}`;
         if (i === "error") return <ExclamationCircleIcon className={c} />;
@@ -120,7 +131,7 @@ const StatusPanel = ({
             <CardTitle>{_("Status")}</CardTitle>
             <CardBody>
                 <List isPlain iconSize="large">
-                    {status.map((s) => (
+                    {status.map((s: TODO_TYPE) => (
                         <ListItem icon={icon(s)} key={s.key}>
                             <Tooltip
                                 className="tukit-tooltip-pre"

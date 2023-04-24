@@ -21,9 +21,10 @@
 import cockpit from "cockpit";
 import { proxy as serviceProxy } from "service";
 import { stringToBool } from "./utils";
+import { TODO_TYPE } from "./todo";
 
-let _dbusClient;
-const dbusClient = () => {
+let _dbusClient: TODO_TYPE;
+const dbusClient = (): TODO_TYPE => {
     if (!_dbusClient) {
         _dbusClient = cockpit.dbus("org.opensuse.tukit", {
             bus: "system",
@@ -33,7 +34,7 @@ const dbusClient = () => {
     return _dbusClient;
 };
 
-let _snapshotProxy;
+let _snapshotProxy: TODO_TYPE;
 const snapshotsProxy = () => {
     if (!_snapshotProxy) {
         _snapshotProxy = dbusClient().proxy(
@@ -44,7 +45,7 @@ const snapshotsProxy = () => {
     return _snapshotProxy;
 };
 
-const createSnapshot = (snap) => {
+const createSnapshot = (snap: TODO_TYPE) => {
     if (Array.isArray(snap)) {
         const [number, dflt, active, date, description] = snap;
         return {
@@ -65,7 +66,7 @@ const createSnapshot = (snap) => {
     }
 };
 
-let _transactionsProxy;
+let _transactionsProxy: TODO_TYPE;
 const transactionsProxy = () => {
     if (!_transactionsProxy) {
         _transactionsProxy = dbusClient().proxy(
@@ -76,7 +77,7 @@ const transactionsProxy = () => {
     return _transactionsProxy;
 };
 
-let _tukitdProxy;
+let _tukitdProxy: TODO_TYPE;
 const tukitdProxy = () => {
     if (!_tukitdProxy) {
         _tukitdProxy = serviceProxy("tukitd");

@@ -45,14 +45,15 @@ import {
     PackageIcon,
 } from "@patternfly/react-icons";
 import { transactionsProxy } from "../tukit";
-import { categoryProps, severityProps } from "../update";
+import { Update, categoryProps, severityProps } from "../update";
 import { linkify } from "../utils";
 
 import "./UpdatesItem.scss";
+import { TODO_TYPE } from "@/todo";
 
 const _ = cockpit.gettext;
 
-const UpdateDetails = ({ u }) => {
+const UpdateDetails = ({ u }: {u: Update}) => {
     const [dialogVisible, setDialogVisible] = useState(false);
     return (
         <>
@@ -83,7 +84,7 @@ const UpdateDetails = ({ u }) => {
                         </Button>,
                     ]}
                 >
-                    <DataList isCompact>
+                    <DataList isCompact aria-label="TODO_TYPE">
                         {Object.entries(u).map(([k, v]) => (
                             <DataListItem key={k}>
                                 <DataListItemRow>
@@ -109,13 +110,13 @@ const UpdateDetails = ({ u }) => {
     );
 };
 
-const UpdateItem = ({ u }) => {
+const UpdateItem = ({ u }: {u: Update}) => {
     const icon = () => {
         if (u.kind === "package") return <PackageIcon />;
         else if (u.kind === "patch") return <BugIcon />;
         else return <InfoCircleIcon />;
     };
-    const updateCells = (u) => {
+    const updateCells = (u: Update) => {
         // package
         if (u.kind === "package")
             return [
@@ -176,7 +177,7 @@ const UpdateItem = ({ u }) => {
                         ...updateCells(u),
                     ]}
                 />
-                <DataListAction isPlainButtonAction>
+                <DataListAction isPlainButtonAction aria-label="TODO_TYPE" aria-labelledby="TODO_TYPE" id="TODO_TYPE">
                     <UpdateDetails u={u} />
                 </DataListAction>
             </DataListItemRow>
@@ -184,15 +185,23 @@ const UpdateItem = ({ u }) => {
     );
 };
 
-const UpdatesItem = ({ updates, setError, setDirty, setWaiting, waiting }) => {
+type UpdatesItemProps = {
+    updates: Update[];
+    waiting: string | null | boolean;
+    setWaiting: (waiting: string | null) => void;
+    setError: (error: string | null) => void;
+    setDirty: (dirty: boolean) => void;
+};
+
+const UpdatesItem = ({ updates, setError, setDirty, setWaiting, waiting }: UpdatesItemProps) => {
     const [expanded, setExpanded] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
 
-    const update = async (reboot) => {
+    const update = async (reboot: boolean) => {
         setWaiting(_("Installing updates..."));
         const proxy = transactionsProxy();
 
-        function finishedHandler(ev, snapID, exitcode, output) {
+        function finishedHandler(ev: TODO_TYPE, snapID: TODO_TYPE, exitcode: TODO_TYPE, output: TODO_TYPE) {
             console.log("command finished");
             console.log(`exit ${exitcode}`);
             console.log(`output: ${output}`);
@@ -202,7 +211,7 @@ const UpdatesItem = ({ updates, setError, setDirty, setWaiting, waiting }) => {
             proxy.removeEventListener("CommandExecuted", finishedHandler);
         }
 
-        function errorHandler(ev, snapID, exitcode, output) {
+        function errorHandler(ev: TODO_TYPE, snapID: TODO_TYPE, exitcode: TODO_TYPE, output: TODO_TYPE) {
             console.log(`exit ${exitcode}`);
             console.log(`output: ${output}`);
             setError(
@@ -232,7 +241,7 @@ const UpdatesItem = ({ updates, setError, setDirty, setWaiting, waiting }) => {
                     rebootMethod
                 );
                 console.log(`new snapshot: ${snapID}`);
-            } catch (e) {
+            } catch (e: TODO_TYPE) {
                 setWaiting(null);
                 // this is "early" error returned directly from method
                 setError(e.toString());
@@ -251,6 +260,7 @@ const UpdatesItem = ({ updates, setError, setDirty, setWaiting, waiting }) => {
         <DataListItem key="updates" isExpanded={expanded}>
             <DataListItemRow>
                 <DataListToggle
+                    id="TODO_TYPE"
                     onClick={() => {
                         setExpanded(!expanded);
                     }}
@@ -275,7 +285,7 @@ const UpdatesItem = ({ updates, setError, setDirty, setWaiting, waiting }) => {
                         <DataListCell key="buttons">
                             <Button
                                 variant="primary"
-                                isDisabled={waiting}
+                                isDisabled={!!waiting}
                                 onClick={() => {
                                     updateAndReboot();
                                 }}
@@ -286,7 +296,7 @@ const UpdatesItem = ({ updates, setError, setDirty, setWaiting, waiting }) => {
                         </DataListCell>,
                     ]}
                 />
-                <DataListAction>
+                <DataListAction aria-label="TODO_TYPE" aria-labelledby="TODO_TYPE" id="TODO_TYPE">
                     <Dropdown
                         isPlain
                         isOpen={menuOpen}
@@ -301,7 +311,7 @@ const UpdatesItem = ({ updates, setError, setDirty, setWaiting, waiting }) => {
                         dropdownItems={[
                             <DropdownItem
                                 key="update"
-                                isDisabled={waiting}
+                                isDisabled={!!waiting}
                                 onClick={() => {
                                     updateOnly();
                                 }}
@@ -312,9 +322,9 @@ const UpdatesItem = ({ updates, setError, setDirty, setWaiting, waiting }) => {
                     />
                 </DataListAction>
             </DataListItemRow>
-            <DataListContent hasNoPadding isHidden={!expanded}>
-                <DataList isCompact>
-                    {updates.map((u) => (
+            <DataListContent hasNoPadding isHidden={!expanded} aria-label="TODO_TYPE">
+                <DataList isCompact aria-label="TODO_TYPE">
+                    {updates.map((u: Update) => (
                         <UpdateItem key={u.name} u={u} />
                     ))}
                 </DataList>

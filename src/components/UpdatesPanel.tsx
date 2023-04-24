@@ -20,7 +20,7 @@
 import cockpit from "cockpit";
 import * as timeformat from "timeformat";
 import React, { useState, useEffect } from "react";
-import XMLParser from "react-xml-parser";
+import XMLParser, { XMLElement } from "react-xml-parser";
 import {
     Button,
     Card,
@@ -30,14 +30,15 @@ import {
     FlexItem,
     Text,
 } from "@patternfly/react-core";
-import { kindPrio, categoryPrio, severityPrio } from "../update";
+import { kindPrio, categoryPrio, severityPrio, KindValues, CategoryValues, SeverityValues, KindKeys, CategoryKeys, SeverityKeys, Update } from "../update";
 import { decodeHTMLEntities } from "../utils";
+import { TODO_TYPE } from "@/todo";
 
 const _ = cockpit.gettext;
 
 // simplify structure of XMLParser return values
-const flattenXMLData = (data, prefix = "") => {
-    const values = {};
+const flattenXMLData = (data: XMLElement, prefix = "") => {
+    const values: TODO_TYPE = {};
     // NOTE: this will make {"": value} for root item
     if (data.value) values[prefix] = data.value;
     if (prefix !== "") prefix = `${prefix}_`;
@@ -50,6 +51,16 @@ const flattenXMLData = (data, prefix = "") => {
     return values;
 };
 
+type UpdatesPanelProps = {
+    dirty: boolean;
+    waiting: string | null;
+    setUpdates: (updates: TODO_TYPE[]) => void;
+    setError: (error: string | null) => void;
+    setWaiting: (waiting: string | null) => void;
+    setDirty: (dirty: boolean) => void;
+
+};
+
 const UpdatesPanel = ({
     setUpdates,
     setError,
@@ -57,12 +68,12 @@ const UpdatesPanel = ({
     setDirty,
     waiting,
     setWaiting,
-}) => {
-    const [lastCheck, setLastCheck] = useState();
+}: UpdatesPanelProps) => {
+    const [lastCheck, setLastCheck] = useState<Date>();
 
-    const getUpdates = async (arg) => {
+    const getUpdates = async (arg: string) => {
         const cmd = ["zypper", "-q", "--xmlout", arg];
-        let out = await cockpit.spawn(cmd, {
+        let out: string = await cockpit.spawn(cmd, {
             superuser: "require",
             err: "message", // TODO: check if it works as expected
         });
@@ -86,7 +97,7 @@ const UpdatesPanel = ({
                 };
             });
     };
-    const updateKey = (u) => {
+    const updateKey = (u: Update): [KindValues, CategoryValues, SeverityValues, string] => {
         return [
             kindPrio[u.kind],
             categoryPrio[u.category],
@@ -94,7 +105,7 @@ const UpdatesPanel = ({
             u.name,
         ];
     };
-    const updateCmp = (a, b) => {
+    const updateCmp = (a: Update, b: Update) => {
         const ak = updateKey(a);
         const bk = updateKey(b);
         if (ak > bk) return 1;
@@ -112,14 +123,14 @@ const UpdatesPanel = ({
         try {
             const refcmd = ["zypper", "ref"];
             await cockpit.spawn(refcmd, { superuser: true, err: "message" });
-            const updates = [].concat(
+            const updates = Array.prototype.concat(
                 await getUpdates("list-updates"),
                 await getUpdates("list-patches")
             );
             updates.sort(updateCmp);
             setUpdates(updates);
             setLastCheck(new Date());
-        } catch (e) {
+        } catch (e: TODO_TYPE) {
             setError(
                 cockpit.format(
                     _("Error checking for updates: $0"),
@@ -154,8 +165,8 @@ const UpdatesPanel = ({
                     <FlexItem align={{ default: "alignRight" }}>
                         <Button
                             variant="primary"
-                            isLoading={waiting}
-                            isDisabled={waiting}
+                            isLoading={!!waiting}
+                            isDisabled={!!waiting}
                             onClick={() => {
                                 setDirty(true);
                             }}
