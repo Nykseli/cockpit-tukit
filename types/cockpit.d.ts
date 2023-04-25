@@ -8,9 +8,9 @@ interface Func1<T, R = void> {
 
 declare type DbusOptions = {
 	bus: "session" | "user" | "system" | "none";
-	address: string;
-	superuser?: "require";
-	track: boolean;
+	address?: string;
+	superuser?: "require" | "try";
+	track?: boolean;
 };
 
 type Fail = {
@@ -57,11 +57,19 @@ interface Proxy {
 	data: Object;
 }
 
+type DbusEvent = "close" | "owner";
+
+type DBusEventCallback<T extends DbusEvent> =
+	T extends "close" ? (options: TODO_TYPE) => void :
+	T extends "owner" ? (event: TODO_TYPE, owner: TODO_TYPE) => void :
+	never;
+
 interface DbusClient {
 	wait(callback?: string): Promise<TODO_TYPE>;
 	close(problem?: string): void;
 	proxy(interface?: string, path?: string): Proxy;
 	proxies(interface?: string[], path?: string[]): Proxy[];
+	addEventListener<T extends DbusEvent>(event: T, callback: DBusEventCallback<T>): void;
 	options: DbusOptions;
 	unique_name: string;
 }
@@ -80,7 +88,7 @@ declare module "cockpit" {
 	function gettext(context: string, text: string): string;
 	function format(template: string, args: string[] | Object): string;
 
-	function dbus(name: string, options?: DbusOptions[]): DbusClient;
+	function dbus(name: string, options?: DbusOptions): DbusClient;
 
 	function jump(todo: string, host?: string | null): void;
 	function script(script: string, args: SpawnConfig): SpawnPromise;
