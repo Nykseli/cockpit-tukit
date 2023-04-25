@@ -21,6 +21,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Application from "./app";
 
+import { foo } from "./foo";
+
 /*
  * PF4 overrides need to come after the JSX components imports because
  * these are importing CSS stylesheets that we are overriding
@@ -34,7 +36,8 @@ import "./app.scss";
 console.log(foo("foo"))
  */
 document.addEventListener("DOMContentLoaded", function () {
-    const container = document.getElementById("app");
-    const root = createRoot(container);
-    root.render(React.createElement(Application, {}));
+	ReactDOM.render(
+		React.createElement(Application, {}),
+		document.getElementById("app"),
+	);
 });
