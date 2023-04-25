@@ -19,19 +19,19 @@
  */
 
 const statusSeverity = {
-    "": -1,
-    info: 0,
-    warning: 1,
-    error: 2,
+	"": -1,
+	info: 0,
+	warning: 1,
+	error: 2,
 };
 
 type StatusSeverity = keyof typeof statusSeverity;
 
-export const mostSevereStatus = (statuses: {type: StatusSeverity}[]) => {
-    if (statuses.length === 0) return {};
-    let ret = statuses[0];
-    statuses.forEach((s) => {
-        if (statusSeverity[s.type] > statusSeverity[ret.type]) ret = s;
-    });
-    return ret;
+export const mostSevereStatus = (statuses: { type: StatusSeverity }[]) => {
+	if (statuses.length === 0) return {};
+	let ret = statuses[0];
+	statuses.forEach((s) => {
+		if (statusSeverity[s.type] > statusSeverity[ret.type]) ret = s;
+	});
+	return ret;
 };

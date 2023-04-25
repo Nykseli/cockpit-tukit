@@ -1,8 +1,8 @@
-import {stringToBool} from './utils'
-import cockpit from 'cockpit'
+import { stringToBool } from "./utils";
+import cockpit from "cockpit";
 
-const _ = cockpit.gettext
+const _ = cockpit.gettext;
 
 export function foo() {
-    return stringToBool(_(123))
+	return stringToBool(_(123));
 }

@@ -25,64 +25,70 @@ import { TODO_TYPE } from "./todo";
 
 let _dbusClient: TODO_TYPE;
 const dbusClient = (): TODO_TYPE => {
-    if (!_dbusClient) {
-        _dbusClient = cockpit.dbus("org.opensuse.tukit", {
-            bus: "system",
-            superuser: "try",
-        });
-    }
-    return _dbusClient;
+	if (!_dbusClient) {
+		_dbusClient = cockpit.dbus("org.opensuse.tukit", {
+			bus: "system",
+			superuser: "try",
+		});
+	}
+	return _dbusClient;
 };
 
 let _snapshotProxy: TODO_TYPE;
 const snapshotsProxy = () => {
-    if (!_snapshotProxy) {
-        _snapshotProxy = dbusClient().proxy(
-            "org.opensuse.tukit.Snapshot",
-            "/org/opensuse/tukit/Snapshot"
-        );
-    }
-    return _snapshotProxy;
+	if (!_snapshotProxy) {
+		_snapshotProxy = dbusClient().proxy(
+			"org.opensuse.tukit.Snapshot",
+			"/org/opensuse/tukit/Snapshot",
+		);
+	}
+	return _snapshotProxy;
 };
 
 const createSnapshot = (snap: TODO_TYPE) => {
-    if (Array.isArray(snap)) {
-        const [number, dflt, active, date, description] = snap;
-        return {
-            number: parseInt(number),
-            default: stringToBool(dflt),
-            active: stringToBool(active),
-            date: new Date(date + "Z"), // dates are UTC but have no marking
-            description,
-        };
-    } else {
-        return {
-            number: parseInt(snap.number),
-            default: stringToBool(snap.default),
-            active: stringToBool(snap.active),
-            date: new Date(snap.date + "Z"), // dates are UTC but have no marking
-            description: snap.description,
-        };
-    }
+	if (Array.isArray(snap)) {
+		const [number, dflt, active, date, description] = snap;
+		return {
+			number: parseInt(number),
+			default: stringToBool(dflt),
+			active: stringToBool(active),
+			date: new Date(date + "Z"), // dates are UTC but have no marking
+			description,
+		};
+	} else {
+		return {
+			number: parseInt(snap.number),
+			default: stringToBool(snap.default),
+			active: stringToBool(snap.active),
+			date: new Date(snap.date + "Z"), // dates are UTC but have no marking
+			description: snap.description,
+		};
+	}
 };
 
 let _transactionsProxy: TODO_TYPE;
 const transactionsProxy = () => {
-    if (!_transactionsProxy) {
-        _transactionsProxy = dbusClient().proxy(
-            "org.opensuse.tukit.Transaction",
-            "/org/opensuse/tukit/Transaction"
-        );
-    }
-    return _transactionsProxy;
+	if (!_transactionsProxy) {
+		_transactionsProxy = dbusClient().proxy(
+			"org.opensuse.tukit.Transaction",
+			"/org/opensuse/tukit/Transaction",
+		);
+	}
+	return _transactionsProxy;
 };
 
 let _tukitdProxy: TODO_TYPE;
 const tukitdProxy = () => {
-    if (!_tukitdProxy) {
-        _tukitdProxy = serviceProxy("tukitd");
-    }
-    return _tukitdProxy;
+	if (!_tukitdProxy) {
+		_tukitdProxy = serviceProxy("tukitd");
+	}
+	return _tukitdProxy;
 };
 
-export { dbusClient, snapshotsProxy, createSnapshot, transactionsProxy, tukitdProxy };
+export {
+	dbusClient,
+	snapshotsProxy,
+	createSnapshot,
+	transactionsProxy,
+	tukitdProxy,
+};

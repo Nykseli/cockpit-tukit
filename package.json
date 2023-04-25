@@ -9,8 +9,8 @@
   "scripts": {
     "watch": "ESBUILD_WATCH='true' ./build.js",
     "build": "./build.js",
-    "eslint": "eslint --ext .js --ext .jsx src/",
-    "eslint:fix": "eslint --fix --ext .js --ext .jsx src/"
+    "lint": "rome check .",
+    "format": "rome format . --write"
   },
   "devDependencies": {
     "argparse": "^2.0.1",
@@ -31,7 +31,6 @@
     "eslint-config-standard-react": "^13.0.0",
     "eslint-plugin-flowtype": "^8.0.3",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.4.0",
@@ -40,6 +39,7 @@
     "jed": "^1.1.1",
     "po2json": "^1.0.0-alpha",
     "qunit": "^2.9.3",
+    "rome": "^12.0.0",
     "sass": "^1.61.0",
     "sizzle": "^2.3.3",
     "stylelint": "^15.10.1",
