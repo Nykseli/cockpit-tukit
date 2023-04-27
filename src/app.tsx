@@ -44,17 +44,16 @@ import UpdatesItem from "./components/UpdatesItem";
 import StatusPanel from "./components/StatusPanel";
 import UpdatesPanel from "./components/UpdatesPanel";
 
-import { createSnapshot, snapshotsProxy, tukitdProxy } from "./tukit";
-import { mostSevereStatus } from "./status";
-import { TODO_TYPE } from "./todo";
+import { Snapshot, createSnapshot, snapshotsProxy, tukitdProxy } from "./tukit";
+import { Status, mostSevereStatus } from "./status";
 import { Update } from "./update";
 
 const _ = cockpit.gettext;
 
 const Application = () => {
-	const [status, setStatus] = useState([]);
+	const [status, setStatus] = useState<Status[]>([]);
 
-	const [snapshots, setSnapshots] = useState([]);
+	const [snapshots, setSnapshots] = useState<Snapshot[]>([]);
 	const [snapshotsWaiting, setSnapshotsWaiting] = useState<string | null>(null);
 	const [snapshotsDirty, setSnapshotsDirty] = useState(true);
 
@@ -160,13 +159,13 @@ const Application = () => {
 			try {
 				const snaps = (
 					await proxy.List("number,default,active,date,description")
-				).map((snap: TODO_TYPE) => createSnapshot(snap));
+				).map((snap) => createSnapshot(snap));
 				// remove "current" snapshot
 				snaps.shift();
-				snaps.sort((a: TODO_TYPE, b: TODO_TYPE) => b.number - a.number);
+				snaps.sort((a, b) => b.number - a.number);
 				// mark old snapshots
-				let active: TODO_TYPE | null = null;
-				snaps.forEach((s: TODO_TYPE) => {
+				let active: Snapshot | null = null;
+				snaps.forEach((s) => {
 					if (active) s.old = true;
 					if (s.active) active = s;
 				});
@@ -228,7 +227,7 @@ const Application = () => {
 											waiting={snapshotsWaiting || updatesWaiting}
 										/>
 									)}
-									{snapshots.map((item: TODO_TYPE) => (
+									{snapshots.map((item) => (
 										<SnapshotItem
 											key={item.number}
 											item={item}

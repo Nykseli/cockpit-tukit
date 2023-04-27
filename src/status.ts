@@ -23,12 +23,19 @@ const statusSeverity = {
 	info: 0,
 	warning: 1,
 	error: 2,
-};
+} as const;
 
 type StatusSeverity = keyof typeof statusSeverity;
 
-export const mostSevereStatus = (statuses: { type: StatusSeverity }[]) => {
-	if (statuses.length === 0) return {};
+export type Status = {
+	key: "wait" | "updates" | "updates-error" | "new-snapshot" | "system-ok";
+	title: string | null | boolean;
+	type: StatusSeverity,
+	details?: {icon: string}
+}
+
+export const mostSevereStatus = (statuses: Status[]): Status | null => {
+	if (statuses.length === 0) return null;
 	let ret = statuses[0];
 	statuses.forEach((s) => {
 		if (statusSeverity[s.type] > statusSeverity[ret.type]) ret = s;

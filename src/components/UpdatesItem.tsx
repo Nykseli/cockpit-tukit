@@ -49,11 +49,10 @@ import { Update, categoryProps, severityProps } from "../update";
 import { linkify } from "../utils";
 
 import "./UpdatesItem.scss";
-import { TODO_TYPE } from "@/todo";
 
 const _ = cockpit.gettext;
 
-const UpdateDetails = ({ u }: {u: Update}) => {
+const UpdateDetails = ({ u }: { u: Update }) => {
     const [dialogVisible, setDialogVisible] = useState(false);
     return (
         <>
@@ -110,7 +109,7 @@ const UpdateDetails = ({ u }: {u: Update}) => {
     );
 };
 
-const UpdateItem = ({ u }: {u: Update}) => {
+const UpdateItem = ({ u }: { u: Update }) => {
     const icon = () => {
         if (u.kind === "package") return <PackageIcon />;
         else if (u.kind === "patch") return <BugIcon />;
@@ -201,7 +200,7 @@ const UpdatesItem = ({ updates, setError, setDirty, setWaiting, waiting }: Updat
         setWaiting(_("Installing updates..."));
         const proxy = transactionsProxy();
 
-        function finishedHandler(ev: TODO_TYPE, snapID: TODO_TYPE, exitcode: TODO_TYPE, output: TODO_TYPE) {
+        function finishedHandler(ev: CustomEvent<unknown>, snapID: string, exitcode: number, output: string) {
             console.log("command finished");
             console.log(`exit ${exitcode}`);
             console.log(`output: ${output}`);
@@ -211,7 +210,7 @@ const UpdatesItem = ({ updates, setError, setDirty, setWaiting, waiting }: Updat
             proxy.removeEventListener("CommandExecuted", finishedHandler);
         }
 
-        function errorHandler(ev: TODO_TYPE, snapID: TODO_TYPE, exitcode: TODO_TYPE, output: TODO_TYPE) {
+        function errorHandler(ev: CustomEvent<unknown>, snapID: string, exitcode: number, output: string) {
             console.log(`exit ${exitcode}`);
             console.log(`output: ${output}`);
             setError(
@@ -229,6 +228,8 @@ const UpdatesItem = ({ updates, setError, setDirty, setWaiting, waiting }: Updat
 
         proxy.wait(async () => {
             try {
+                // You can find the "CommandExecuted" | "Error" events and `ExecuteAndReboot` function from here:
+                // https://github.com/openSUSE/transactional-update/blob/master/dbus/org.opensuse.tukit.Transaction.xml
                 proxy.addEventListener("CommandExecuted", finishedHandler);
                 proxy.addEventListener("Error", errorHandler);
                 const cmd = "zypper --non-interactive up";
@@ -241,7 +242,8 @@ const UpdatesItem = ({ updates, setError, setDirty, setWaiting, waiting }: Updat
                     rebootMethod
                 );
                 console.log(`new snapshot: ${snapID}`);
-            } catch (e: TODO_TYPE) {
+            } catch (_e) {
+                const e = _e as Error;
                 setWaiting(null);
                 // this is "early" error returned directly from method
                 setError(e.toString());
