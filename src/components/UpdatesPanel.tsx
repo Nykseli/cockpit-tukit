@@ -32,13 +32,13 @@ import {
 } from "@patternfly/react-core";
 import { kindPrio, categoryPrio, severityPrio, KindValues, CategoryValues, SeverityValues, KindKeys, CategoryKeys, SeverityKeys, Update } from "../update";
 import { decodeHTMLEntities } from "../utils";
-import { TODO_TYPE } from "@/todo";
 
 const _ = cockpit.gettext;
 
 // simplify structure of XMLParser return values
-const flattenXMLData = (data: XMLElement, prefix = "") => {
-    const values: TODO_TYPE = {};
+const flattenXMLData = (data: XMLElement, prefix = ""): Update => {
+    // TODO: safer parsing to make sure we actually have a valid Update object
+    const values: any = {};
     // NOTE: this will make {"": value} for root item
     if (data.value) values[prefix] = data.value;
     if (prefix !== "") prefix = `${prefix}_`;
@@ -48,17 +48,16 @@ const flattenXMLData = (data: XMLElement, prefix = "") => {
     data.children.forEach((c) => {
         Object.assign(values, flattenXMLData(c, `${prefix}${c.name}`));
     });
-    return values;
+    return values as Update;
 };
 
 type UpdatesPanelProps = {
     dirty: boolean;
     waiting: string | null;
-    setUpdates: (updates: TODO_TYPE[]) => void;
+    setUpdates: (updates: Update[]) => void;
     setError: (error: string | null) => void;
     setWaiting: (waiting: string | null) => void;
     setDirty: (dirty: boolean) => void;
-
 };
 
 const UpdatesPanel = ({
@@ -130,7 +129,8 @@ const UpdatesPanel = ({
             updates.sort(updateCmp);
             setUpdates(updates);
             setLastCheck(new Date());
-        } catch (e: TODO_TYPE) {
+        } catch (_e) {
+            const e: Error = _e as Error;
             setError(
                 cockpit.format(
                     _("Error checking for updates: $0"),

@@ -39,12 +39,12 @@ import {
 	Tooltip,
 } from "@patternfly/react-core";
 import { CheckCircleIcon } from "@patternfly/react-icons";
-import { TODO_TYPE } from "@/todo";
+import { Snapshot } from "@/tukit";
 
 const _ = cockpit.gettext;
 
 type SnapshotItemProps = {
-	item: TODO_TYPE;
+	item: Snapshot;
 	waiting: string | null;
 	setWaiting: (waiting: string | null) => void;
 	setDirty: (dirty: boolean) => void;
@@ -59,7 +59,7 @@ const SnapshotItem = ({
 	const [expanded, setExpanded] = useState(false);
 	const [menuOpen, setMenuOpen] = useState(false);
 
-	const rollback = async (snap: TODO_TYPE, msg: string, reboot: boolean) => {
+	const rollback = async (snap: Snapshot, msg: string, reboot: boolean) => {
 		setWaiting(msg);
 		try {
 			let script = `transactional-update rollback ${snap.number}`;
@@ -79,19 +79,19 @@ const SnapshotItem = ({
 		}
 		setWaiting(null);
 	};
-	const rollbackAndReboot = (snap: TODO_TYPE) => {
+	const rollbackAndReboot = (snap: Snapshot) => {
 		rollback(snap, _("Rolling back..."), true);
 	};
-	const rollbackOnly = (snap: TODO_TYPE) => {
+	const rollbackOnly = (snap: Snapshot) => {
 		rollback(snap, _("Rolling back..."), false);
 	};
-	const activateAndReboot = (snap: TODO_TYPE) => {
+	const activateAndReboot = (snap: Snapshot) => {
 		rollback(snap, _("Activating..."), true);
 	};
-	const activateOnly = (snap: TODO_TYPE) => {
+	const activateOnly = (snap: Snapshot) => {
 		rollback(snap, _("Activating..."), false);
 	};
-	const actions = (item: TODO_TYPE): any[] | undefined => {
+	const actions = (item: Snapshot): JSX.Element[] | undefined => {
 		if (item.old) {
 			return [
 				<DropdownItem
@@ -142,7 +142,7 @@ const SnapshotItem = ({
 						</DataListCell>,
 						<DataListCell key="date">
 							<Tooltip content={timeformat.dateTimeSeconds(item.date)}>
-								<span>{timeformat.distanceToNow(item.date, _("ago"))}</span>
+								<span>{timeformat.distanceToNow(item.date, false)}</span>
 							</Tooltip>
 						</DataListCell>,
 						<DataListCell key="labels">

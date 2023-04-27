@@ -38,17 +38,18 @@ import {
 
 import "./StatusPanel.scss";
 import { Update } from "@/update";
-import { TODO_TYPE } from "@/todo";
+import type { Status } from "@/status";
+import { Snapshot } from "@/tukit";
 
 const _ = cockpit.gettext;
 
 type StatusPanelProps = {
 	updates: Update[];
 	waiting: string | null | boolean;
-	status: TODO_TYPE;
-	setStatus: (status: TODO_TYPE) => void;
+	status: Status[];
+	setStatus: (status: Status[]) => void;
 	updatesError: string | null;
-	snapshots: TODO_TYPE[];
+	snapshots: Snapshot[];
 };
 
 const StatusPanel = ({
@@ -65,6 +66,7 @@ const StatusPanel = ({
 		if (waiting) {
 			setStatus([
 				{
+					type: "",
 					key: "wait",
 					title: waiting,
 					details: { icon: "pending" },
@@ -72,7 +74,7 @@ const StatusPanel = ({
 			]);
 			return;
 		}
-		const s = [];
+		const s: Status[] = [];
 		if (updatesError) {
 			s.push({
 				key: "updates-error",
@@ -95,8 +97,8 @@ const StatusPanel = ({
 			const security_updates = updates.filter((u) => u.category === "security");
 			const [t, msg] =
 				security_updates.length > 0
-					? ["warning", _("Security updates available")]
-					: ["info", _("Updates available")];
+					? ["warning", _("Security updates available")] as const
+					: ["info", _("Updates available")] as const;
 			s.push({
 				key: "updates",
 				type: t,
@@ -106,6 +108,7 @@ const StatusPanel = ({
 		// no status? it's good!
 		if (s.length === 0) {
 			s.push({
+				type: "",
 				key: "system-ok",
 				title: _("System is up to date"),
 				details: { icon: "check" },
@@ -114,7 +117,7 @@ const StatusPanel = ({
 		setStatus(s);
 	}, [waiting, snapshots, updates, updatesError, setStatus]);
 
-	const icon = (s: TODO_TYPE) => {
+	const icon = (s: Status) => {
 		const i = (s.details && s.details.icon) || s.type;
 		const c = `tukit-status-${i}`;
 		if (i === "error") return <ExclamationCircleIcon className={c} />;
@@ -128,7 +131,7 @@ const StatusPanel = ({
 			<CardTitle>{_("Status")}</CardTitle>
 			<CardBody>
 				<List isPlain iconSize="large">
-					{status.map((s: TODO_TYPE) => (
+					{status.map((s) => (
 						<ListItem icon={icon(s)} key={s.key}>
 							<Tooltip
 								className="tukit-tooltip-pre"
