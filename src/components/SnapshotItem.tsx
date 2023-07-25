@@ -36,7 +36,10 @@ import {
 	Label,
 	Tooltip,
 } from "@patternfly/react-core";
-import { DropdownPosition, KebabToggle } from "@patternfly/react-core/deprecated";
+import {
+	DropdownPosition,
+	KebabToggle,
+} from "@patternfly/react-core/deprecated";
 import { CheckCircleIcon } from "@patternfly/react-icons";
 import { Snapshot } from "@/tukit";
 
@@ -63,16 +66,16 @@ const SnapshotItem = ({
 		try {
 			let script = `transactional-update rollback ${snap.number}`;
 			if (reboot) {
-				script = script + " && reboot";
+				script = `${script} && reboot`;
 			}
 			const out = await cockpit.script(script, {
 				superuser: "require",
 				err: "message",
 			});
-			console.log("rollback output: " + out);
+			console.log(`rollback output: ${out}`);
 			setDirty(true);
 		} catch (e) {
-			console.log("rollback error: " + e);
+			console.log(`rollback error: ${e}`);
 			// TODO: better error handling
 			alert(e);
 		}
@@ -160,7 +163,7 @@ const SnapshotItem = ({
 									onClick={() => {
 										activateAndReboot(item);
 									}}
-									isSmall
+									size="sm"
 								>
 									{_("Activate and Reboot")}
 								</Button>
@@ -172,7 +175,7 @@ const SnapshotItem = ({
 									onClick={() => {
 										rollbackAndReboot(item);
 									}}
-									isSmall
+									size="sm"
 								>
 									{_("Rollback and Reboot")}
 								</Button>

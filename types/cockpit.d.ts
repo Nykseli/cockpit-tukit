@@ -55,31 +55,39 @@ declare module "cockpit" {
 	};
 
 	type ProxyMethods<T extends Record<string, (...args: any[]) => any>> = {
-		[k in keyof T]: T[k]
-	}
+		[k in keyof T]: T[k];
+	};
 
-	type Proxy<T extends Record<string, (...args: any[]) => any> = {}> = ProxyMethods<T> & {
-		client: DbusClient;
-		path: string;
-		iface: string;
-		valid: boolean;
-		data: Object;
-		wait: (callback: () => void) => Promise<void>;
-	}
+	type Proxy<T extends Record<string, (...args: any[]) => any> = {}> =
+		ProxyMethods<T> & {
+			client: DbusClient;
+			path: string;
+			iface: string;
+			valid: boolean;
+			data: Object;
+			wait: (callback: () => void) => Promise<void>;
+		};
 
 	type DbusEvent = "close" | "owner";
 
-	type DBusEventCallback<T extends DbusEvent> =
-		T extends "close" ? (event: CustomEvent<unknown>, options: { problem?: string }) => void :
-		T extends "owner" ? (event: CustomEvent<unknown>, owner?: string | null) => void :
-		never;
+	type DBusEventCallback<T extends DbusEvent> = T extends "close"
+		? (event: CustomEvent<unknown>, options: { problem?: string }) => void
+		: T extends "owner"
+		? (event: CustomEvent<unknown>, owner?: string | null) => void
+		: never;
 
 	interface DbusClient {
 		wait: (callback: () => void) => Promise<void>;
 		close(problem?: string): void;
-		proxy<T extends Record<string, (...args: any[]) => any> = {}>(interface?: string, path?: string): Proxy<T>;
+		proxy<T extends Record<string, (...args: any[]) => any> = {}>(
+			interface?: string,
+			path?: string,
+		): Proxy<T>;
 		proxies(interface?: string[], path?: string[]): Proxy[];
-		addEventListener<T extends DbusEvent>(event: T, callback: DBusEventCallback<T>): void;
+		addEventListener<T extends DbusEvent>(
+			event: T,
+			callback: DBusEventCallback<T>,
+		): void;
 		options: DbusOptions;
 		unique_name: string;
 	}
@@ -103,5 +111,4 @@ declare module "cockpit" {
 	function spawn(args: string | string[], options?: SpawnConfig): SpawnPromise;
 
 	const transport: { host?: string | null };
-
 }

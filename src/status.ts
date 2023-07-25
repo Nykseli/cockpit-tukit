@@ -30,9 +30,9 @@ type StatusSeverity = keyof typeof statusSeverity;
 export type Status = {
 	key: "wait" | "updates" | "updates-error" | "new-snapshot" | "system-ok";
 	title: string | null | boolean;
-	type: StatusSeverity,
-	details?: {icon: string}
-}
+	type: StatusSeverity;
+	details?: { icon: string };
+};
 
 export const mostSevereStatus = (statuses: Status[]): Status | null => {
 	if (statuses.length === 0) return null;

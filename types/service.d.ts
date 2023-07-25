@@ -1,11 +1,18 @@
 declare module "service" {
 	type ServiceProxy = {
-		exists: boolean | null,
-		state: "starting" | "running" | "stopping" | "stopped" |"failed"| null | undefined,
-		enabled: boolean | null | undefined,
+		exists: boolean | null;
+		state:
+			| "starting"
+			| "running"
+			| "stopping"
+			| "stopped"
+			| "failed"
+			| null
+			| undefined;
+		enabled: boolean | null | undefined;
 		wait: (callback: () => void) => Promise<void>;
 
-	/*
+		/*
 		start: start,
 		stop: stop,
 		restart: restart,
@@ -15,7 +22,7 @@ declare module "service" {
 		disable: disable,
 
 		getRunJournal: getRunJournal, */
-	}
+	};
 
 	function proxy(name: string, kind?: string): ServiceProxy;
 }

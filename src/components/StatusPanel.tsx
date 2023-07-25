@@ -97,8 +97,8 @@ const StatusPanel = ({
 			const security_updates = updates.filter((u) => u.category === "security");
 			const [t, msg] =
 				security_updates.length > 0
-					? ["warning", _("Security updates available")] as const
-					: ["info", _("Updates available")] as const;
+					? (["warning", _("Security updates available")] as const)
+					: (["info", _("Updates available")] as const);
 			s.push({
 				key: "updates",
 				type: t,

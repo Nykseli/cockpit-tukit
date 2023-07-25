@@ -33,16 +33,19 @@ const dbusClient = (): DbusClient => {
 	return _dbusClient;
 };
 
-type SnapshotRecordKeys<T extends string> =
-	T extends `${infer K},${infer Rest}` ? K | SnapshotRecordKeys<Rest> :
-	T extends `${infer K}` ? K :
-	never;
+type SnapshotRecordKeys<T extends string> = T extends `${infer K},${infer Rest}`
+	? K | SnapshotRecordKeys<Rest>
+	: T extends `${infer K}`
+	? K
+	: never;
 
 export type SnapshotRecord<T extends string> = {
 	[k in SnapshotRecordKeys<T>]: string;
 };
 
-type SnapshotMethods = { "List": <T extends string>(args: T) => SnapshotRecord<T>[] };
+type SnapshotMethods = {
+	List: <T extends string>(args: T) => SnapshotRecord<T>[];
+};
 
 let _snapshotProxy: Proxy<SnapshotMethods>;
 const snapshotsProxy = () => {
@@ -70,7 +73,7 @@ export type Snapshot = {
 	date: Date;
 	description: string;
 	old?: boolean;
-}
+};
 
 const createSnapshot = (snap: SnapIn): Snapshot => {
 	if (Array.isArray(snap)) {
@@ -96,17 +99,47 @@ const createSnapshot = (snap: SnapIn): Snapshot => {
 type TransactionEvent = "TransactionOpened" | "CommandExecuted" | "Error";
 
 type TransactionEventCallback<T extends TransactionEvent> =
-	T extends "TransactionOpened" ? (event: CustomEvent<unknown>, snapshot: string) => void :
-	T extends "Error" ? (event: CustomEvent<unknown>, snapshot: string, returncode: number, output: string) => void :
-	T extends "CommandExecuted" ? (event: CustomEvent<unknown>, snapshot: string, returncode: number, output: string) => void :
-	never;
+	T extends "TransactionOpened"
+		? (event: CustomEvent<unknown>, snapshot: string) => void
+		: T extends "Error"
+		? (
+				event: CustomEvent<unknown>,
+				snapshot: string,
+				returncode: number,
+				output: string,
+		  ) => void
+		: T extends "CommandExecuted"
+		? (
+				event: CustomEvent<unknown>,
+				snapshot: string,
+				returncode: number,
+				output: string,
+		  ) => void
+		: never;
 
 // https://kubic.opensuse.org/documentation/man-pages/transactional-update.conf.5.html#REBOOT_METHOD
-type TransactionReboot = "auto" | "cured" | "rebootmgr" | "systemd" | "kexec" | "notify" | "none"
+type TransactionReboot =
+	| "auto"
+	| "cured"
+	| "rebootmgr"
+	| "systemd"
+	| "kexec"
+	| "notify"
+	| "none";
 type TransactionsMethods = {
-	addEventListener: <T extends TransactionEvent>(event: T, callback: TransactionEventCallback<T>) => void;
-	removeEventListener: <T extends TransactionEvent>(event: T, callback: TransactionEventCallback<T>) => void;
-	ExecuteAndReboot: (base: "default" | "base" | string, command: string, rebootmethod: TransactionReboot) => Promise<string>;
+	addEventListener: <T extends TransactionEvent>(
+		event: T,
+		callback: TransactionEventCallback<T>,
+	) => void;
+	removeEventListener: <T extends TransactionEvent>(
+		event: T,
+		callback: TransactionEventCallback<T>,
+	) => void;
+	ExecuteAndReboot: (
+		base: "default" | "base" | string,
+		command: string,
+		rebootmethod: TransactionReboot,
+	) => Promise<string>;
 };
 
 let _transactionsProxy: Proxy<TransactionsMethods>;
