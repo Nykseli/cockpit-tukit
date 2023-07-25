@@ -94,7 +94,7 @@ const Application = () => {
 	const loading = () => {
 		return (
 			<EmptyState>
-				<EmptyStateIcon variant="icon" icon={Spinner} />
+				<EmptyStateIcon icon={Spinner} />
 				<Title headingLevel="h2">{_("Loading...")}</Title>
 			</EmptyState>
 		);
@@ -113,7 +113,6 @@ const Application = () => {
 				<EmptyState>
 					<EmptyStateIcon
 						className="serviceError"
-						variant="icon"
 						icon={ExclamationCircleIcon}
 					/>
 					<Title headingLevel="h2" size="md">
@@ -130,7 +129,6 @@ const Application = () => {
 				<EmptyState>
 					<EmptyStateIcon
 						className="serviceError"
-						variant="icon"
 						icon={ExclamationCircleIcon}
 					/>
 					<Title headingLevel="h2" size="md">
@@ -173,7 +171,7 @@ const Application = () => {
 			} catch (e) {
 				// service problems are reported in serviceProblem()
 				if (serviceReady && tukitdProxy().state === "running") {
-					alert("ERROR " + e);
+					alert(`ERROR: ${e}`);
 				}
 			}
 			setSnapshotsWaiting(null);
@@ -206,7 +204,7 @@ const Application = () => {
 							{_("Snapshots & Updates")}
 							<Button
 								isDisabled={!!snapshotsWaiting || !!updatesWaiting}
-								isSmall
+								size="sm"
 								variant="plain"
 								onClick={() => {
 									setDirty(true);

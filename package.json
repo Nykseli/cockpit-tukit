@@ -54,10 +54,10 @@
     "deep-equal": "^2.2.2"
   },
   "dependencies": {
-    "@patternfly/patternfly": "5.0.0-alpha.64",
-    "@patternfly/react-core": "5.0.0-alpha.115",
-    "@patternfly/react-icons": "5.0.0-alpha.19",
-    "@patternfly/react-styles": "5.0.0-alpha.16",
+    "@patternfly/patternfly": "5.0.0-prerelease.16",
+    "@patternfly/react-core": "5.0.0-prerelease.26",
+    "@patternfly/react-icons": "5.0.0-prerelease.9",
+    "@patternfly/react-styles": "5.0.0-prerelease.7",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-xml-parser": "^1.1.8"
