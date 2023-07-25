@@ -35,9 +35,12 @@ import {
 	DropdownItem,
 	Label,
 	Tooltip,
+	MenuToggleElement,
+	MenuToggle,
+	DropdownList,
 } from "@patternfly/react-core";
-import { DropdownPosition, KebabToggle } from "@patternfly/react-core/deprecated";
-import { CheckCircleIcon } from "@patternfly/react-icons";
+import { DropdownPosition } from "@patternfly/react-core/deprecated";
+import { CheckCircleIcon, EllipsisVIcon } from "@patternfly/react-icons";
 import { Snapshot } from "@/tukit";
 
 const _ = cockpit.gettext;
@@ -160,7 +163,7 @@ const SnapshotItem = ({
 									onClick={() => {
 										activateAndReboot(item);
 									}}
-									isSmall
+									size="sm"
 								>
 									{_("Activate and Reboot")}
 								</Button>
@@ -172,7 +175,7 @@ const SnapshotItem = ({
 									onClick={() => {
 										rollbackAndReboot(item);
 									}}
-									isSmall
+									size="sm"
 								>
 									{_("Rollback and Reboot")}
 								</Button>
@@ -189,16 +192,23 @@ const SnapshotItem = ({
 						<Dropdown
 							isPlain
 							isOpen={menuOpen}
-							position={DropdownPosition.right}
-							toggle={
-								<KebabToggle
-									onToggle={() => {
+							toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
+								<MenuToggle
+									variant="plain"
+									ref={toggleRef} onClick={() => {
 										setMenuOpen(!menuOpen);
-									}}
-								/>
-							}
-							dropdownItems={actions(item)}
-						/>
+									}} isExpanded={menuOpen}>
+									<EllipsisVIcon />
+								</MenuToggle>
+							)}
+							popperProps={{
+								position: DropdownPosition.right,
+							}}
+						>
+							<DropdownList>
+								{actions(item)}
+							</DropdownList>
+						</Dropdown>
 					)}
 				</DataListAction>
 			</DataListItemRow>

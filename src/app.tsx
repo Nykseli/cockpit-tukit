@@ -94,7 +94,7 @@ const Application = () => {
 	const loading = () => {
 		return (
 			<EmptyState>
-				<EmptyStateIcon variant="icon" icon={Spinner} />
+				<EmptyStateIcon icon={Spinner} />
 				<Title headingLevel="h2">{_("Loading...")}</Title>
 			</EmptyState>
 		);
@@ -113,7 +113,6 @@ const Application = () => {
 				<EmptyState>
 					<EmptyStateIcon
 						className="serviceError"
-						variant="icon"
 						icon={ExclamationCircleIcon}
 					/>
 					<Title headingLevel="h2" size="md">
@@ -130,7 +129,6 @@ const Application = () => {
 				<EmptyState>
 					<EmptyStateIcon
 						className="serviceError"
-						variant="icon"
 						icon={ExclamationCircleIcon}
 					/>
 					<Title headingLevel="h2" size="md">
@@ -183,7 +181,6 @@ const Application = () => {
 	return (
 		<Page>
 			<PageSection>
-				<h1>Hello from typescript!</h1>
 				<Gallery className="ct-cards-grid" hasGutter>
 					<StatusPanel
 						waiting={snapshotsWaiting || updatesWaiting}
@@ -206,7 +203,7 @@ const Application = () => {
 							{_("Snapshots & Updates")}
 							<Button
 								isDisabled={!!snapshotsWaiting || !!updatesWaiting}
-								isSmall
+								size="sm"
 								variant="plain"
 								onClick={() => {
 									setDirty(true);

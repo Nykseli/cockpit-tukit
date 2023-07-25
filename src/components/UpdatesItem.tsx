@@ -36,13 +36,17 @@ import {
     Modal,
     ModalVariant,
     Tooltip,
+    DropdownList,
+    MenuToggleElement,
+    MenuToggle,
 } from "@patternfly/react-core";
-import { DropdownPosition, KebabToggle } from "@patternfly/react-core/deprecated";
+import { DropdownPosition } from "@patternfly/react-core/deprecated";
 import {
     BugIcon,
     ExclamationTriangleIcon,
     InfoCircleIcon,
     PackageIcon,
+    EllipsisVIcon
 } from "@patternfly/react-icons";
 import { transactionsProxy } from "../tukit";
 import { Update, categoryProps, severityProps } from "../update";
@@ -272,7 +276,6 @@ const UpdatesItem = ({ updates, setError, setDirty, setWaiting, waiting }: Updat
                     dataListCells={[
                         <DataListCell isIcon key="icon">
                             <ExclamationTriangleIcon
-                                size="md"
                                 color="var(--pf-global--warning-color--100)"
                             />
                         </DataListCell>,
@@ -302,15 +305,20 @@ const UpdatesItem = ({ updates, setError, setDirty, setWaiting, waiting }: Updat
                     <Dropdown
                         isPlain
                         isOpen={menuOpen}
-                        position={DropdownPosition.right}
-                        toggle={
-                            <KebabToggle
-                                onToggle={() => {
+                        toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
+                            <MenuToggle
+                                variant="plain"
+                                ref={toggleRef} onClick={() => {
                                     setMenuOpen(!menuOpen);
-                                }}
-                            />
-                        }
-                        dropdownItems={[
+                                }} isExpanded={menuOpen}>
+                                <EllipsisVIcon />
+                            </MenuToggle>
+                        )}
+                        popperProps={{
+                            position: DropdownPosition.right,
+                        }}
+                    >
+                        <DropdownList>
                             <DropdownItem
                                 key="update"
                                 isDisabled={!!waiting}
@@ -319,9 +327,9 @@ const UpdatesItem = ({ updates, setError, setDirty, setWaiting, waiting }: Updat
                                 }}
                             >
                                 {_("Update without Reboot")}
-                            </DropdownItem>,
-                        ]}
-                    />
+                            </DropdownItem>
+                        </DropdownList>
+                    </Dropdown>
                 </DataListAction>
             </DataListItemRow>
             <DataListContent hasNoPadding isHidden={!expanded} aria-label="TODO_TYPE">
