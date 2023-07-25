@@ -8,7 +8,7 @@
   "license": "LGPL-2.1",
   "scripts": {
     "watch": "ESBUILD_WATCH='true' ./build.js",
-    "build": "./build.js",
+    "build": "tsc -noEmit && ./build.js",
     "lint": "rome check .",
     "format": "rome format . --write"
   },
