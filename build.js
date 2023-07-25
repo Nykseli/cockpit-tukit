@@ -90,7 +90,7 @@ const context = await esbuild.context({
         ...lint
             ? [
                 stylelintPlugin({ filter: new RegExp(cwd + '\/src\/.*\.(css?|scss?)$') }),
-                eslintPlugin({ filter: new RegExp(cwd + '\/src\/.*\.(jsx?|js?)$') })
+                eslintPlugin({ filter: new RegExp(cwd + '\/src\/.*\.(tsx?|ts?)$') })
             ]
             : [],
         // Esbuild will only copy assets that are explicitly imported and used
