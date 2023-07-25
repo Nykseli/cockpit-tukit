@@ -183,7 +183,7 @@ const Application = () => {
 	return (
 		<Page>
 			<PageSection>
-				<h1>Hello from typescript!</h1>
+				<h1>Hello typescript!</h1>
 				<Gallery className="ct-cards-grid" hasGutter>
 					<StatusPanel
 						waiting={snapshotsWaiting || updatesWaiting}
