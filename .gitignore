@@ -15,3 +15,5 @@ src/lib/
 POTFILES*
 tmp/
 pkg
+src/*.js
+lib

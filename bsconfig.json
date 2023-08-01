@@ -1,0 +1,18 @@
+{
+  "name": "template",
+  "sources": {
+    "dir": "src",
+    "subdirs": true
+  },
+  "package-specs": {
+    "module": "es6",
+    "in-source": true
+  },
+  "suffix": ".js",
+  "reason": { "react-jsx": 3, "mode": "classic" },
+  "bsc-flags": ["-open RescriptCore"],
+  "bs-dependencies": ["@rescript/react", "@rescript/core"],
+  "warnings": {
+    "error": "+101"
+  }
+}

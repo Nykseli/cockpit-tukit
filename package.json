@@ -9,6 +9,7 @@
   "scripts": {
     "watch": "ESBUILD_WATCH='true' ./build.js",
     "build": "tsc -noEmit && ./build.js",
+    "resbuild": "rescript build",
     "lint": "rome check .",
     "format": "rome format . --write",
     "postinstall": "patch-package"
@@ -19,10 +20,10 @@
     "@types/react-dom": "^18.0.11",
     "argparse": "^2.0.1",
     "chrome-remote-interface": "^0.32.1",
+    "esbuild": "^0.18.6",
     "esbuild-plugin-copy": "^2.1.1",
     "esbuild-plugin-replace": "^1.3.0",
     "esbuild-sass-plugin": "^2.10.0",
-    "esbuild": "^0.18.6",
     "htmlparser": "^1.7.7",
     "jed": "^1.1.1",
     "patch-package": "^7.0.2",
@@ -43,9 +44,12 @@
     "@patternfly/react-core": "5.0.0-alpha.115",
     "@patternfly/react-icons": "5.0.0-alpha.19",
     "@patternfly/react-styles": "5.0.0-alpha.16",
+    "@rescript/core": "*",
+    "@rescript/react": "^0.11.0",
     "glob": "^10.3.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-xml-parser": "^1.1.8"
+    "react-xml-parser": "^1.1.8",
+    "rescript": "*"
   }
 }
