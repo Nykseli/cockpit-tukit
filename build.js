@@ -73,10 +73,10 @@ function watch_dirs(dir, on_change) {
 const context = await esbuild.context({
 	...(!production ? { sourcemap: "linked" } : {}),
 	bundle: true,
-	entryPoints: ["./src/index.ts"],
+	entryPoints: ["./src/index.js"],
 	external: ["*.woff", "*.woff2", "*.jpg", "*.svg", "../../assets*"], // Allow external font files which live in ../../static/fonts
 	legalComments: "external", // Move all legal comments to a .LEGAL.txt file
-	loader: { ".ts": "tsx" },
+	loader: { ".ts": "tsx", ".js": "jsx" },
 	minify: production,
 	nodePaths,
 	outdir,
