@@ -17,7 +17,7 @@
  * To contact SUSE LLC about this file by physical or electronic mail, you may
  * find current contact information at www.suse.com.
  */
-import React, { Key } from "react";
+import React, { type Key } from "react";
 
 export const stringToBool = (s: string) => {
 	return ["yes", "true", "1"].includes(s.toLowerCase());
@@ -27,8 +27,7 @@ export const stringToBool = (s: string) => {
 // numeric ones.
 // see: https://github.com/openSUSE/libzypp/blob/master/zypp-core/parser/xml/XmlEscape.cc
 export const decodeHTMLEntities = (s: string | null): string | null => {
-	if (!s)
-		return null;
+	if (!s) return null;
 
 	const entities = { lt: "<", gt: ">", amp: "&", apos: "'", quot: '"' };
 	return s

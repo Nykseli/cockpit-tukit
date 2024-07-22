@@ -1,9 +1,7 @@
 // https://github.com/cockpit-project/cockpit/pull/13214
 
 declare module "cockpit" {
-	interface Func1<T, R = void> {
-		(arg: T): R;
-	}
+	type Func1<T, R = void> = (arg: T) => R;
 
 	type DbusOptions = {
 		bus: "session" | "user" | "system" | "none";
@@ -73,8 +71,8 @@ declare module "cockpit" {
 	type DBusEventCallback<T extends DbusEvent> = T extends "close"
 		? (event: CustomEvent<unknown>, options: { problem?: string }) => void
 		: T extends "owner"
-		? (event: CustomEvent<unknown>, owner?: string | null) => void
-		: never;
+			? (event: CustomEvent<unknown>, owner?: string | null) => void
+			: never;
 
 	interface DbusClient {
 		wait: (callback: () => void) => Promise<void>;

@@ -46,9 +46,14 @@ import UpdatesItem from "./components/UpdatesItem";
 import StatusPanel from "./components/StatusPanel";
 import UpdatesPanel from "./components/UpdatesPanel";
 
-import { Snapshot, createSnapshot, snapshotsProxy, tukitdProxy } from "./tukit";
-import { Status, mostSevereStatus } from "./status";
-import { Update } from "./update";
+import {
+	type Snapshot,
+	createSnapshot,
+	snapshotsProxy,
+	tukitdProxy,
+} from "./tukit";
+import { type Status, mostSevereStatus } from "./status";
+import type { Update } from "./update";
 
 const _ = cockpit.gettext;
 
@@ -76,8 +81,7 @@ const Application = () => {
 	};
 
 	useEffect(() => {
-		if (superuser.allowed)
-			getSnapshots();
+		if (superuser.allowed) getSnapshots();
 		// TODO: FIX!
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [snapshotsDirty, superuser.allowed]);
@@ -156,7 +160,9 @@ const Application = () => {
 						icon={ExclamationCircleIcon}
 					/>
 					<Title headingLevel="h1" size="xl">
-						{_("Administrative access is required to access updates and snapshots.")}
+						{_(
+							"Administrative access is required to access updates and snapshots.",
+						)}
 					</Title>
 				</EmptyState>
 			);
@@ -182,10 +188,10 @@ const Application = () => {
 				snaps.sort((a, b) => b.number - a.number);
 				// mark old snapshots
 				let active: Snapshot | null = null;
-				snaps.forEach((s) => {
-					if (active) s.old = true;
-					if (s.active) active = s;
-				});
+				for (const snap of snaps) {
+					if (active) snap.old = true;
+					if (snap.active) active = snap;
+				}
 				setSnapshots(snaps);
 			} catch (e) {
 				// service problems are reported in serviceProblem()

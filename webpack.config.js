@@ -1,5 +1,5 @@
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 
 const copy = require("copy-webpack-plugin");
 const extract = require("mini-css-extract-plugin");
@@ -82,10 +82,10 @@ module.exports = {
 				test: /\.(js|ts|jsx|tsx)$/,
 			},
 			/*     {
-                test: /\.(js|ts|jsx|tsx)$/,
-                use: 'ts-loader',
-                exclude:/node_modules/,
-            }, */
+				test: /\.(js|ts|jsx|tsx)$/,
+				use: 'ts-loader',
+				exclude:/node_modules/,
+			}, */
 			/* HACK: remove unwanted fonts from PatternFly's css */
 			{
 				test: /patternfly-4-cockpit.scss$/,

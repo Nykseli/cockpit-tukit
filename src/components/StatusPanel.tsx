@@ -37,9 +37,9 @@ import {
 } from "@patternfly/react-icons";
 
 import "./StatusPanel.scss";
-import { Update } from "@/update";
+import type { Update } from "@/update";
 import type { Status } from "@/status";
-import { Snapshot } from "@/tukit";
+import type { Snapshot } from "@/tukit";
 
 const _ = cockpit.gettext;
 
@@ -120,10 +120,10 @@ const StatusPanel = ({
 		const i = s.details?.icon || s.type;
 		const c = `tukit-status-${i}`;
 		if (i === "error") return <ExclamationCircleIcon className={c} />;
-		else if (i === "warning") return <ExclamationTriangleIcon className={c} />;
-		else if (i === "check") return <CheckCircleIcon className={c} />;
-		else if (i === "pending") return <PendingIcon className={c} />;
-		else return <InfoCircleIcon className={c} />;
+		if (i === "warning") return <ExclamationTriangleIcon className={c} />;
+		if (i === "check") return <CheckCircleIcon className={c} />;
+		if (i === "pending") return <PendingIcon className={c} />;
+		return <InfoCircleIcon className={c} />;
 	};
 	return (
 		<Card className="ct-card-info tukit-status-panel">

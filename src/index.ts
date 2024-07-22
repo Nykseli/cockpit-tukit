@@ -33,7 +33,7 @@ import "./app.scss";
 /*
 console.log(foo("foo"))
  */
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
 	const container = document.getElementById("app");
 	if (container) {
 		const root = createRoot(container);

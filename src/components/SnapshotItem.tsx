@@ -20,7 +20,8 @@
 
 import cockpit from "cockpit";
 import * as timeformat from "timeformat";
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 import {
 	Badge,
 	Button,
@@ -35,13 +36,13 @@ import {
 	DropdownItem,
 	Label,
 	Tooltip,
-	MenuToggleElement,
+	type MenuToggleElement,
 	MenuToggle,
 	DropdownList,
 } from "@patternfly/react-core";
 import { DropdownPosition } from "@patternfly/react-core/deprecated";
 import { CheckCircleIcon, EllipsisVIcon } from "@patternfly/react-icons";
-import { Snapshot } from "@/tukit";
+import type { Snapshot } from "@/tukit";
 
 const _ = cockpit.gettext;
 

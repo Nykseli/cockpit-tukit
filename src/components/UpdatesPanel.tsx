@@ -20,7 +20,7 @@
 import cockpit from "cockpit";
 import * as timeformat from "timeformat";
 import React, { useState, useEffect } from "react";
-import XMLParser, { XMLElement } from "react-xml-parser";
+import XMLParser, { type XMLElement } from "react-xml-parser";
 import {
 	Button,
 	Card,
@@ -34,10 +34,10 @@ import {
 	kindPrio,
 	categoryPrio,
 	severityPrio,
-	KindValues,
-	CategoryValues,
-	SeverityValues,
-	Update,
+	type KindValues,
+	type CategoryValues,
+	type SeverityValues,
+	type Update,
 } from "../update";
 import { decodeHTMLEntities } from "../utils";
 
@@ -50,12 +50,12 @@ const flattenXMLData = (data: XMLElement, prefix = ""): Update => {
 	// NOTE: this will make {"": value} for root item
 	if (data.value) values[prefix] = data.value;
 	if (prefix !== "") prefix = `${prefix}_`;
-	Object.keys(data.attributes).forEach((a) => {
-		values[`${prefix}${a}`] = data.attributes[a];
-	});
-	data.children.forEach((c) => {
-		Object.assign(values, flattenXMLData(c, `${prefix}${c.name}`));
-	});
+	for (const key of Object.keys(data.attributes)) {
+		values[`${prefix}${key}`] = data.attributes[key];
+	}
+	for (const child of data.children) {
+		Object.assign(values, flattenXMLData(child, `${prefix}${child.name}`));
+	}
 	return values as Update;
 };
 

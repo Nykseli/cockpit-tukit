@@ -73,7 +73,7 @@ const prioProps = (p: keyof typeof prioLabelColor) => {
 			typeof prioLabelColor
 		>,
 		icon_disabled: prioIcon[p],
-		variant: "outline" as "outline",
+		variant: "outline" as const,
 	};
 };
 

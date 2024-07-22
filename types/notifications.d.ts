@@ -1,5 +1,5 @@
 // TODO: reorganise code so `Status` is part of notifications module
-import { Status } from "@/status";
+import type { Status } from "@/status";
 
 declare module "notifications" {
 	class PageStatus {

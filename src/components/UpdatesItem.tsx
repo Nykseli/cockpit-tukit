@@ -19,7 +19,8 @@
  */
 
 import cockpit from "cockpit";
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 import {
 	Button,
 	DataList,
@@ -37,7 +38,7 @@ import {
 	ModalVariant,
 	Tooltip,
 	DropdownList,
-	MenuToggleElement,
+	type MenuToggleElement,
 	MenuToggle,
 } from "@patternfly/react-core";
 import { DropdownPosition } from "@patternfly/react-core/deprecated";
@@ -49,7 +50,7 @@ import {
 	EllipsisVIcon,
 } from "@patternfly/react-icons";
 import { transactionsProxy } from "../tukit";
-import { Update, categoryProps, severityProps } from "../update";
+import { type Update, categoryProps, severityProps } from "../update";
 import { linkify } from "../utils";
 
 import "./UpdatesItem.scss";
@@ -116,8 +117,8 @@ const UpdateDetails = ({ u }: { u: Update }) => {
 const UpdateItem = ({ u }: { u: Update }) => {
 	const icon = () => {
 		if (u.kind === "package") return <PackageIcon />;
-		else if (u.kind === "patch") return <BugIcon />;
-		else return <InfoCircleIcon />;
+		if (u.kind === "patch") return <BugIcon />;
+		return <InfoCircleIcon />;
 	};
 	const updateCells = (u: Update) => {
 		// package

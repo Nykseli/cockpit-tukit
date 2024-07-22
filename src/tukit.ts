@@ -18,8 +18,8 @@
  * find current contact information at www.suse.com.
  */
 
-import cockpit, { DbusClient, Proxy } from "cockpit";
-import { ServiceProxy, proxy as serviceProxy } from "service";
+import cockpit, { type DbusClient, type Proxy } from "cockpit";
+import { type ServiceProxy, proxy as serviceProxy } from "service";
 import { stringToBool } from "./utils";
 
 let _dbusClient: DbusClient;
@@ -36,8 +36,8 @@ const dbusClient = (): DbusClient => {
 type SnapshotRecordKeys<T extends string> = T extends `${infer K},${infer Rest}`
 	? K | SnapshotRecordKeys<Rest>
 	: T extends `${infer K}`
-	? K
-	: never;
+		? K
+		: never;
 
 export type SnapshotRecord<T extends string> = {
 	[k in SnapshotRecordKeys<T>]: string;
@@ -79,21 +79,20 @@ const createSnapshot = (snap: SnapIn): Snapshot => {
 	if (Array.isArray(snap)) {
 		const [number, dflt, active, date, description] = snap;
 		return {
-			number: parseInt(number),
+			number: Number.parseInt(number),
 			default: stringToBool(dflt),
 			active: stringToBool(active),
 			date: new Date(`${date}Z`), // dates are UTC but have no marking
 			description,
 		};
-	} else {
-		return {
-			number: parseInt(snap.number),
-			default: stringToBool(snap.default),
-			active: stringToBool(snap.active),
-			date: new Date(`${snap.date}Z`), // dates are UTC but have no marking
-			description: snap.description,
-		};
 	}
+	return {
+		number: Number.parseInt(snap.number),
+		default: stringToBool(snap.default),
+		active: stringToBool(snap.active),
+		date: new Date(`${snap.date}Z`), // dates are UTC but have no marking
+		description: snap.description,
+	};
 };
 
 type TransactionEvent = "TransactionOpened" | "CommandExecuted" | "Error";
@@ -102,20 +101,20 @@ type TransactionEventCallback<T extends TransactionEvent> =
 	T extends "TransactionOpened"
 		? (event: CustomEvent<unknown>, snapshot: string) => void
 		: T extends "Error"
-		? (
-				event: CustomEvent<unknown>,
-				snapshot: string,
-				returncode: number,
-				output: string,
-		  ) => void
-		: T extends "CommandExecuted"
-		? (
-				event: CustomEvent<unknown>,
-				snapshot: string,
-				returncode: number,
-				output: string,
-		  ) => void
-		: never;
+			? (
+					event: CustomEvent<unknown>,
+					snapshot: string,
+					returncode: number,
+					output: string,
+				) => void
+			: T extends "CommandExecuted"
+				? (
+						event: CustomEvent<unknown>,
+						snapshot: string,
+						returncode: number,
+						output: string,
+					) => void
+				: never;
 
 // https://kubic.opensuse.org/documentation/man-pages/transactional-update.conf.5.html#REBOOT_METHOD
 type TransactionReboot =

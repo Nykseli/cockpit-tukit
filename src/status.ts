@@ -37,8 +37,8 @@ export type Status = {
 export const mostSevereStatus = (statuses: Status[]): Status | null => {
 	if (statuses.length === 0) return null;
 	let ret = statuses[0];
-	statuses.forEach((s) => {
-		if (statusSeverity[s.type] > statusSeverity[ret.type]) ret = s;
-	});
+	for (const status of statuses) {
+		if (statusSeverity[status.type] > statusSeverity[ret.type]) ret = status;
+	}
 	return ret;
 };
