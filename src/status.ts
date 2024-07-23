@@ -19,10 +19,10 @@
  */
 
 const statusSeverity = {
-  "": -1,
-  info: 0,
-  warning: 1,
-  error: 2,
+    "": -1,
+    info: 0,
+    warning: 1,
+    error: 2,
 } as const;
 
 type StatusSeverity = keyof typeof statusSeverity;
@@ -35,10 +35,10 @@ export type Status = {
 };
 
 export const mostSevereStatus = (statuses: Status[]): Status | null => {
-  if (statuses.length === 0) return null;
-  let ret = statuses[0];
-  for (const status of statuses) {
-    if (statusSeverity[status.type] > statusSeverity[ret.type]) ret = status;
-  }
-  return ret;
+    if (statuses.length === 0) return null;
+    let ret = statuses[0];
+    for (const status of statuses) {
+        if (statusSeverity[status.type] > statusSeverity[ret.type]) ret = status;
+    }
+    return ret;
 };

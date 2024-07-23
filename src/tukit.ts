@@ -24,13 +24,13 @@ import { stringToBool } from "./utils";
 
 let _dbusClient: DbusClient;
 const dbusClient = (): DbusClient => {
-  if (!_dbusClient) {
-    _dbusClient = cockpit.dbus("org.opensuse.tukit", {
-      bus: "system",
-      superuser: "try",
-    });
-  }
-  return _dbusClient;
+    if (!_dbusClient) {
+        _dbusClient = cockpit.dbus("org.opensuse.tukit", {
+            bus: "system",
+            superuser: "try",
+        });
+    }
+    return _dbusClient;
 };
 
 type SnapshotRecordKeys<T extends string> = T extends `${infer K},${infer Rest}`
@@ -49,13 +49,13 @@ type SnapshotMethods = {
 
 let _snapshotProxy: Proxy<SnapshotMethods>;
 const snapshotsProxy = () => {
-  if (!_snapshotProxy) {
-    _snapshotProxy = dbusClient().proxy<SnapshotMethods>(
-      "org.opensuse.tukit.Snapshot",
-      "/org/opensuse/tukit/Snapshot",
-    );
-  }
-  return _snapshotProxy;
+    if (!_snapshotProxy) {
+        _snapshotProxy = dbusClient().proxy<SnapshotMethods>(
+            "org.opensuse.tukit.Snapshot",
+            "/org/opensuse/tukit/Snapshot",
+        );
+    }
+    return _snapshotProxy;
 };
 
 type SnapIn = {
@@ -76,23 +76,23 @@ export type Snapshot = {
 };
 
 const createSnapshot = (snap: SnapIn): Snapshot => {
-  if (Array.isArray(snap)) {
-    const [number, dflt, active, date, description] = snap;
+    if (Array.isArray(snap)) {
+        const [number, dflt, active, date, description] = snap;
+        return {
+            number: Number.parseInt(number),
+            default: stringToBool(dflt),
+            active: stringToBool(active),
+            date: new Date(`${date}Z`), // dates are UTC but have no marking
+            description,
+        };
+    }
     return {
-      number: Number.parseInt(number),
-      default: stringToBool(dflt),
-      active: stringToBool(active),
-      date: new Date(`${date}Z`), // dates are UTC but have no marking
-      description,
+        number: Number.parseInt(snap.number),
+        default: stringToBool(snap.default),
+        active: stringToBool(snap.active),
+        date: new Date(`${snap.date}Z`), // dates are UTC but have no marking
+        description: snap.description,
     };
-  }
-  return {
-    number: Number.parseInt(snap.number),
-    default: stringToBool(snap.default),
-    active: stringToBool(snap.active),
-    date: new Date(`${snap.date}Z`), // dates are UTC but have no marking
-    description: snap.description,
-  };
 };
 
 type TransactionEvent = "TransactionOpened" | "CommandExecuted" | "Error";
@@ -143,27 +143,27 @@ type TransactionsMethods = {
 
 let _transactionsProxy: Proxy<TransactionsMethods>;
 const transactionsProxy = () => {
-  if (!_transactionsProxy) {
-    _transactionsProxy = dbusClient().proxy(
-      "org.opensuse.tukit.Transaction",
-      "/org/opensuse/tukit/Transaction",
-    );
-  }
-  return _transactionsProxy;
+    if (!_transactionsProxy) {
+        _transactionsProxy = dbusClient().proxy(
+            "org.opensuse.tukit.Transaction",
+            "/org/opensuse/tukit/Transaction",
+        );
+    }
+    return _transactionsProxy;
 };
 
 let _tukitdProxy: ServiceProxy;
 const tukitdProxy = () => {
-  if (!_tukitdProxy) {
-    _tukitdProxy = serviceProxy("tukitd");
-  }
-  return _tukitdProxy;
+    if (!_tukitdProxy) {
+        _tukitdProxy = serviceProxy("tukitd");
+    }
+    return _tukitdProxy;
 };
 
 export {
-  dbusClient,
-  snapshotsProxy,
-  createSnapshot,
-  transactionsProxy,
-  tukitdProxy,
+    dbusClient,
+    snapshotsProxy,
+    createSnapshot,
+    transactionsProxy,
+    tukitdProxy,
 };

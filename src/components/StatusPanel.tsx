@@ -21,19 +21,19 @@
 import cockpit from "cockpit";
 import React, { useEffect } from "react";
 import {
-  Card,
-  CardBody,
-  CardTitle,
-  List,
-  ListItem,
-  Tooltip,
+    Card,
+    CardBody,
+    CardTitle,
+    List,
+    ListItem,
+    Tooltip,
 } from "@patternfly/react-core";
 import {
-  CheckCircleIcon,
-  ExclamationCircleIcon,
-  ExclamationTriangleIcon,
-  InfoCircleIcon,
-  PendingIcon,
+    CheckCircleIcon,
+    ExclamationCircleIcon,
+    ExclamationTriangleIcon,
+    InfoCircleIcon,
+    PendingIcon,
 } from "@patternfly/react-icons";
 
 import "./StatusPanel.scss";
@@ -53,100 +53,100 @@ type StatusPanelProps = {
 };
 
 const StatusPanel = ({
-  waiting,
-  status,
-  setStatus,
-  updates,
-  updatesError,
-  snapshots,
+    waiting,
+    status,
+    setStatus,
+    updates,
+    updatesError,
+    snapshots,
 }: StatusPanelProps) => {
-  // update page status
-  useEffect(() => {
-    if (waiting) {
-      setStatus([
-        {
-          type: "",
-          key: "wait",
-          title: waiting,
-          details: { icon: "pending" },
-        },
-      ]);
-      return;
-    }
-    const s: Status[] = [];
-    if (updatesError) {
-      s.push({
-        key: "updates-error",
-        type: "error",
-        title: updatesError,
-      });
-    }
-    if (snapshots.length > 0 && !snapshots[0].active) {
-      s.push({
-        key: "new-snapshot",
-        type: "info",
-        title: cockpit.format(
-          _("New snapshot #$1 available: $0"),
-          snapshots[0].description,
-          snapshots[0].number,
-        ),
-      });
-    }
-    if (updates.length > 0) {
-      const security_updates = updates.filter((u) => u.category === "security");
-      const [t, msg] =
+    // update page status
+    useEffect(() => {
+        if (waiting) {
+            setStatus([
+                {
+                    type: "",
+                    key: "wait",
+                    title: waiting,
+                    details: { icon: "pending" },
+                },
+            ]);
+            return;
+        }
+        const s: Status[] = [];
+        if (updatesError) {
+            s.push({
+                key: "updates-error",
+                type: "error",
+                title: updatesError,
+            });
+        }
+        if (snapshots.length > 0 && !snapshots[0].active) {
+            s.push({
+                key: "new-snapshot",
+                type: "info",
+                title: cockpit.format(
+                    _("New snapshot #$1 available: $0"),
+                    snapshots[0].description,
+                    snapshots[0].number,
+                ),
+            });
+        }
+        if (updates.length > 0) {
+            const security_updates = updates.filter((u) => u.category === "security");
+            const [t, msg] =
         security_updates.length > 0
-          ? (["warning", _("Security updates available")] as const)
-          : (["info", _("Updates available")] as const);
-      s.push({
-        key: "updates",
-        type: t,
-        title: msg,
-      });
-    }
-    // no status? it's good!
-    if (s.length === 0) {
-      s.push({
-        type: "",
-        key: "system-ok",
-        title: _("System is up to date"),
-        details: { icon: "check" },
-      });
-    }
-    setStatus(s);
-  }, [waiting, snapshots, updates, updatesError, setStatus]);
+            ? (["warning", _("Security updates available")] as const)
+            : (["info", _("Updates available")] as const);
+            s.push({
+                key: "updates",
+                type: t,
+                title: msg,
+            });
+        }
+        // no status? it's good!
+        if (s.length === 0) {
+            s.push({
+                type: "",
+                key: "system-ok",
+                title: _("System is up to date"),
+                details: { icon: "check" },
+            });
+        }
+        setStatus(s);
+    }, [waiting, snapshots, updates, updatesError, setStatus]);
 
-  const icon = (s: Status) => {
-    const i = s.details?.icon || s.type;
-    const c = `tukit-status-${i}`;
-    if (i === "error") return <ExclamationCircleIcon className={c} />;
-    if (i === "warning") return <ExclamationTriangleIcon className={c} />;
-    if (i === "check") return <CheckCircleIcon className={c} />;
-    if (i === "pending") return <PendingIcon className={c} />;
-    return <InfoCircleIcon className={c} />;
-  };
-  return (
-    <Card className="ct-card-info tukit-status-panel">
-      <CardTitle>{_("Status")}</CardTitle>
-      <CardBody>
-        <List isPlain iconSize="large">
-          {status.map((s) => (
-            <ListItem icon={icon(s)} key={s.key}>
-              <Tooltip
+    const icon = (s: Status) => {
+        const i = s.details?.icon || s.type;
+        const c = `tukit-status-${i}`;
+        if (i === "error") return <ExclamationCircleIcon className={c} />;
+        if (i === "warning") return <ExclamationTriangleIcon className={c} />;
+        if (i === "check") return <CheckCircleIcon className={c} />;
+        if (i === "pending") return <PendingIcon className={c} />;
+        return <InfoCircleIcon className={c} />;
+    };
+    return (
+        <Card className="ct-card-info tukit-status-panel">
+            <CardTitle>{_("Status")}</CardTitle>
+            <CardBody>
+                <List isPlain iconSize="large">
+                    {status.map((s) => (
+                        <ListItem icon={icon(s)} key={s.key}>
+                            <Tooltip
                 className="tukit-tooltip-pre"
                 isContentLeftAligned
                 maxWidth="30rem"
                 position="auto"
                 content={s.title}
-              >
-                <span className="tukit-status-text">{s.title}</span>
-              </Tooltip>
-            </ListItem>
-          ))}
-        </List>
-      </CardBody>
-    </Card>
-  );
+                            >
+                                <span className="tukit-status-text">{s.title}</span>
+                            </Tooltip>
+                        </ListItem>
+                    ))}
+                </List>
+            </CardBody>
+        </Card>
+    );
 };
 
 export default StatusPanel;
